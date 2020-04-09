@@ -15,9 +15,11 @@ module.exports = function(app) {
   });
 
   // PUT  /api/workouts
-  app.put('/api/workouts', ({ body }, res) => {
+  app.put('/api/workouts/:id', ({ body }, res) => {
+    const id = req.params.id;
+    
     db.Exercise.create(body)
-      .then(({ _id }) => db.Workout.findOneAndUpdate({}, { $push: { exercises: _id } }, { new: true }))
+      .then(({ _id }) => db.Workout.findOneAndUpdate({ _id: id }, { $push: { exercises: _id } }, { new: true }))
       .then(dbExercise => {
         res.json(dbExercise);
       })
@@ -27,8 +29,15 @@ module.exports = function(app) {
   });
 
   // POST /api/workouts
-  app.post('/api/workouts', ({ body }, res) => {
-    db.Workout.create(body)
+  app.post('/api/workouts/', ({ body }, res) => {
+    const day = new Date.now().getDay();
+    console.log('DAY: ', day);
+    console.log('BODY: ', body);
+    const workout = {
+      day: day,
+      exercised: body
+    };
+    db.Workout.create(workout)
       .then(dbWorkout => {
         res.json(dbWorkout);
       })
@@ -37,8 +46,14 @@ module.exports = function(app) {
       });
   });
 
-  // GET  /api/workouts/range
+  // GET  /api/workouts/range. Gets all workouts
   app.get('api/workouts/range', (req, res) => {
-
+    db.Workout.find({})
+      .then(dbWorkout => {
+        res.json(dbWorkout);
+      })
+      .catch(error => {
+        res.json(error);
+      });
   });
 };

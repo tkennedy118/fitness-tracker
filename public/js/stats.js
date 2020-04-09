@@ -145,6 +145,7 @@ function populateChart(data) {
     }
   });
 
+
   let pieChart = new Chart(pie, {
     type: "pie",
     data: {
