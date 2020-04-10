@@ -15,8 +15,6 @@ module.exports = function(app) {
 
   // GET  /api/workouts
   app.get('/api/workouts', (req, res) => {
-    console.log('INSIDE /API/WORKOUTS');
-    
     db.Workout.find({}).sort({ day: -1 }).limit(1)
       .then(dbWorkout => {
         res.json(dbWorkout);
@@ -28,7 +26,9 @@ module.exports = function(app) {
 
   // PUT  /api/workouts
   app.put('/api/workouts/:id', ({ body, params }, res) => {
-    console.log('INSIDE /API/WORKOUTS/:ID');
+    console.log('INSIDE PUT /API/WORKOUTS/:ID');
+    console.log(':ID ', params.id);
+    console.log('BODY ', body);
     const id = params.id;
 
     db.Workout.findOneAndUpdate({ _id: id }, { $push: { exercises: body }}, { new: true, runValidators: true })
@@ -42,13 +42,10 @@ module.exports = function(app) {
 
   // POST /api/workouts
   app.post('/api/workouts', ({ body }, res) => {
-    console.log('INSIDE /API/WORKOUTS/');
-    const day = Date.now();
-    const workout = {
-      day: day,
-      exercises: body
-    };
-    db.Workout.create(workout)
+    console.log('INSIDE POST /API/WORKOUTS');
+    console.log('BODY ', body);
+
+    db.Workout.create({ day: Date.now() })
       .then(dbWorkout => {
         res.json(dbWorkout);
       })
@@ -59,7 +56,6 @@ module.exports = function(app) {
 
   // GET  /api/workouts/range. Gets all workouts
   app.get('/api/workouts/range', (req, res) => {
-    console.log('INISDE /API/WORKOUTS/RANGE');
     db.Workout.find({})
       .then(dbWorkout => {
         res.json(dbWorkout);
