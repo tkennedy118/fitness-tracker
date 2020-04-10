@@ -64,4 +64,9 @@ module.exports = function(app) {
         res.json(error);
       });
   });
+
+  // GET /
+  app.get('/', (req, res) => {
+    res.redirect('/index.html')
+  })
 };
