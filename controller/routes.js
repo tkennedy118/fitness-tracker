@@ -1,22 +1,17 @@
 const mongoose = require('mongoose');
+const path = require('path');
 const db = require('../models');
 
 module.exports = function(app) {
 
   // GET /exercise.
   app.get('/exercise', (req, res) => {
-    const id = req.url.split('=')[1];
-
-    if (id === undefined) {
-      res.redirect('/exercise.html');
-    } else {
-      res.redirect('/exercise.html?=' + id);
-    }
+    res.sendFile(path.join(__dirname, '../public/exercise.html'));
   });
 
   // GET /stats
   app.get('/stats', (req, res) => {
-    res.redirect('/stats.html');
+    res.sendFile(path.join(__dirname, '../public/stats.html'));
   });
 
   // GET  /api/workouts
@@ -67,6 +62,6 @@ module.exports = function(app) {
 
   // GET /
   app.get('/', (req, res) => {
-    res.redirect('/index.html')
-  })
+    res.sendFile(path.join(__dirname, '../public/index.html'));
+  });
 };
