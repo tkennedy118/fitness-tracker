@@ -3,9 +3,15 @@ const db = require('../models');
 
 module.exports = function(app) {
 
-  // GET /exercise
+  // GET /exercise.
   app.get('/exercise', (req, res) => {
-    res.redirect('/exercise.html');
+    const id = req.url.split('=')[1];
+
+    if (id === undefined) {
+      res.redirect('/exercise.html');
+    } else {
+      res.redirect('/exercise.html?=' + id);
+    }
   });
 
   // GET /stats
@@ -26,9 +32,6 @@ module.exports = function(app) {
 
   // PUT  /api/workouts
   app.put('/api/workouts/:id', ({ body, params }, res) => {
-    console.log('INSIDE PUT /API/WORKOUTS/:ID');
-    console.log(':ID ', params.id);
-    console.log('BODY ', body);
     const id = params.id;
 
     db.Workout.findOneAndUpdate({ _id: id }, { $push: { exercises: body }}, { new: true, runValidators: true })
@@ -42,9 +45,6 @@ module.exports = function(app) {
 
   // POST /api/workouts
   app.post('/api/workouts', ({ body }, res) => {
-    console.log('INSIDE POST /API/WORKOUTS');
-    console.log('BODY ', body);
-
     db.Workout.create({ day: Date.now() })
       .then(dbWorkout => {
         res.json(dbWorkout);
